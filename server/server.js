@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectId} = require('mongodb');
@@ -52,6 +53,31 @@ app.delete('/todos/:id', (req, res) => {
 
     res.send({todo});
   }, e => res.status(400).send(e));
+});
+
+app.patch('/todos/:id', (req, res) => {
+  const id = req.params.id;
+  //It avoids the user is able to update all the obj properties
+  const body = _.pick(req.body, ['text', 'completed']);
+
+  if(!ObjectId.isValid(id)){
+    return res.status(404).send();
+  }
+
+  if(_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+  }else{
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(id, {$set: body},{new: true}).then((todo) => {
+    if(!todo){
+      return res.status(404).send();
+    }
+
+    res.send({todo});
+  }).catch(e => res.status(400).send())
 });
 
 app.listen(port, () => {
