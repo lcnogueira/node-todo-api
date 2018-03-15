@@ -84,6 +84,7 @@ app.patch('/todos/:id', (req, res) => {
 });
 
 //User Handlers
+//Create user
 app.post('/users', (req,res) => {
   //It avoids the user is able to update all the obj properties
   const body = _.pick(req.body, ['email', 'password']);
@@ -100,6 +101,8 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
+
+//Login
 app.post('/users/login', (req, res) => {
   const body = _.pick(req.body, ['email', 'password']);
 
@@ -110,7 +113,16 @@ app.post('/users/login', (req, res) => {
   }).catch(e => {
     res.status(400).send();
   });
-})
+});
+
+//Logout
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }), () => {
+    res.status(400).send();
+  }
+});
 
 //Start to listen the server
 app.listen(port, () => {
