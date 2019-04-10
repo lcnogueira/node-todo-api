@@ -62,10 +62,3 @@ The following endpoints are available:
 | `POST /users` | Create a new user and returns a token. | No | **email** - [String] <br> **password** - [String] |
 | `POST /users/login` | Authenticate a user and returns a token. | No | **email** - [String] <br> **password** - [String] |
 | `DELETE /users/me/token` | Logout a user.  | Yes | &nbsp; |
-
-# Preview
-
-You can test the API by using the following address:
-``` 
-http://my-nodetodoapi.herokuapp.com
-```
